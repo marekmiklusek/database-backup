@@ -155,7 +155,7 @@ php artisan db-backup:run
 
 ### Clean Up Old Backups
 You can clean up old backups in two ways:
-1. Automatically after each backup by setting 'is_automatic' to true
+1. Automatically after each backup by setting `is_automatic` to true
 2. Manually by running the following Artisan command:
 ```bash
 php artisan db-backup:cleanup
