@@ -1,0 +1,25 @@
+{
+    "name": "marekmiklusek/laravel-database-backup",
+    "description": "Package for backing up database in Laravel",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Marek Miklusek",
+            "email": "marek.miklusek@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "MarekMiklusek\\LaravelDatabaseBackup\\": "src"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "MarekMiklusek\\LaravelDatabaseBackup\\DatabaseBackupServiceProvider"
+            ]
+        }
+    }
+}
