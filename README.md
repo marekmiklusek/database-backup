@@ -28,6 +28,22 @@ php artisan vendor:publish --tag=database-backup-config
 ## Local Backup Configuration
 Backups are stored locally by default using the `local` disk.
 
+## Usage
+
+### Run a Backup
+To create a new backup, run the following Artisan command:
+```bash
+php artisan db-backup:run
+```
+
+### Clean Up Old Backups
+You can clean up old backups in two ways:
+1. Automatically after each backup by setting `is_automatic` to true
+2. Manually by running the following Artisan command:
+```bash
+php artisan db-backup:cleanup
+```
+
 ## Google Drive Integration
 
 ### Step 1: Configure Google Drive
@@ -144,22 +160,6 @@ For Desktop Application:
    - The URL will look like: `https://drive.google.com/drive/folders/1A2B3C4D5E6F7...`
    - The folder ID is the string after `/folders/`
 5. Add this folder ID to your `.env` file as `GOOGLE_FOLDER_ID`
-
-## Usage
-
-### Run a Backup
-To create a new backup, run the following Artisan command:
-```bash
-php artisan db-backup:run
-```
-
-### Clean Up Old Backups
-You can clean up old backups in two ways:
-1. Automatically after each backup by setting `is_automatic` to true
-2. Manually by running the following Artisan command:
-```bash
-php artisan db-backup:cleanup
-```
 
 ### That's it! 🚀 You're now ready to use this package — have fun and enjoy! 😊🎉
 
