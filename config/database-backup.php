@@ -45,7 +45,7 @@ return [
     |                 Set to 0 to keep backups indefinitely
     |                 Files older than this will be permanently deleted
     |
-    | - automatic: Enable/disable is_automatic cleanup after backups
+    | - automatic: Enable/disable automatic cleanup after backups
     |                 true: Run cleanup after each backup
     |                 false: Manual cleanup only via command
     |
