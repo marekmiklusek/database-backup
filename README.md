@@ -186,7 +186,6 @@ Triggered when a database backup fails.
 
 - Keep all credentials secure and never commit them to version control
 - Use environment variables for all sensitive information
-- Regularly monitor API usage and access patterns
 - Consider implementing credential rotation for production environments
 
 ## License
