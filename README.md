@@ -1,4 +1,4 @@
-![image(1)](https://github.com/user-attachments/assets/3c576aba-4931-4e77-b6bd-264cd4a336eb)
+![image(1)(2)](https://github.com/user-attachments/assets/7263ce86-3d48-4aec-807d-20267fbf5742)
 # Laravel Database Backup 💾📂🌐
 A lightweight package for automated MySQL database backups in Laravel applications. This package seamlessly integrates with both local storage and Google Drive, providing a reliable solution for database backup management.
 
