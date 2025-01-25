@@ -90,7 +90,7 @@ class BackupRunCommand extends Command
 
             BackupCreated::dispatch();
 
-            $this->automaticCleanup($service->cleanup('is_automatic'));  
+            $this->backupCleanup($service->cleanup('automatic'));  
 
             $this->info('Backup complete!');
             return Command::SUCCESS;
@@ -126,9 +126,9 @@ class BackupRunCommand extends Command
         $this->info('Backup stored on disk: ['.Driver::GOOGLE->value.']');
     }
 
-    private function automaticCleanup(bool $is_automatic): void
+    private function backupCleanup(bool $automatic): void
     {
-        if ($is_automatic) {
+        if ($automatic) {
             $this->info('Automatic cleanup started...');
 
             $exitCode = Artisan::call(BackupCleanupCommand::class);

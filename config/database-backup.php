@@ -45,19 +45,19 @@ return [
     |                 Set to 0 to keep backups indefinitely
     |                 Files older than this will be permanently deleted
     |
-    | - is_automatic: Enable/disable is_automatic cleanup after backups
+    | - automatic: Enable/disable is_automatic cleanup after backups
     |                 true: Run cleanup after each backup
     |                 false: Manual cleanup only via command
     |
     | Usage:
-    | - Automatic: Runs with new backups if is_automatic is true
+    | - Automatic: Runs with new backups if 'automatic' is true
     | - Manual: php artisan db-backup:cleanup
     |
     */
 
     'cleanup' => [
         'days_to_keep' => 14,
-        'is_automatic' => false,
+        'automatic' => false,
     ],
 
     /*
