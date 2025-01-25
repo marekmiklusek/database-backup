@@ -10,7 +10,10 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {},
+    "require": {
+        "php": "^8.2",
+        "laravel/framework": "^11.31"
+    },
     "autoload": {
         "psr-4": {
             "MarekMiklusek\\LaravelDatabaseBackup\\": "src"

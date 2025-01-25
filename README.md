@@ -13,6 +13,11 @@ A lightweight package for automated MySQL database backups in Laravel applicatio
 - Customizable backup settings
 - Minimal configuration required
 
+## System Requirements
+Ensure your system meets the minimum version requirements before installing this package.
+- PHP Version: 8.2
+- Laravel Version: 11
+
 ## Installation
 
 ### Step 1: Install the Package
