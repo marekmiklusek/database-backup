@@ -1,6 +1,6 @@
 {
     "name": "marekmiklusek/laravel-database-backup",
-    "description": "A Laravel package for backing up MySQL databases, with support for storing backups locally, on Google Drive, or both.",
+    "description": "Package for backing up database in Laravel",
     "version": "v1.0.1",
     "license": "MIT",
     "authors": [
