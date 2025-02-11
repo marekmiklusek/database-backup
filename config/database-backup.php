@@ -57,7 +57,7 @@ return [
 
     'cleanup' => [
         'days_to_keep' => 14,
-        'automatic' => false,
+        'automatic' => true,
     ],
 
     /*
