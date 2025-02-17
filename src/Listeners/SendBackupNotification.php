@@ -25,7 +25,15 @@ class SendBackupNotification
      * Handle the event.
      */
     public function handle(BackupCreated|BackupFailed $event): void
-    {          
+    {
+        $shouldNotify = match (true) {
+            $event instanceof BackupCreated => $this->service->notifications('events.backup_successful'),
+            $event instanceof BackupFailed => $this->service->notifications('events.backup_failed'),
+            default => false
+        };
+
+        if (! $shouldNotify) return;
+        
         Notification::route('mail', $this->service->notifications('mail.to'))
             ->notify($this->createNotification($event));
     }
