@@ -36,6 +36,9 @@ class DatabaseBackupServiceProvider extends ServiceProvider
                 __DIR__ . "/../config/{$configName}.php" => config_path("{$configName}.php"),
             ], "{$configName}-config");
 
+            // Merge config, use the package's config file as a fallback when the config file is not published
+            $this->mergeConfigFrom(__DIR__ . "/../config/{$configName}.php", $configName);
+
             // Register commands
             $this->commands([
                 BackupRunCommand::class,

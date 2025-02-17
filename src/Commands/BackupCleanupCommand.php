@@ -49,7 +49,7 @@ class BackupCleanupCommand extends Command
             if ($service->storage('use_both_disks')) {
                 $this->cleanupLocalBackups($service->localDirectory(), $daysToKeep);
                 $this->cleanupGoogleBackups($daysToKeep);
-                $this->info('Cleanup complete for both disks!');
+                $this->line("\033[42m SUCCESS \033[0m Cleanup complete for both disks!");
             } else {
                 match ($driver) {
                     Driver::LOCAL->value => $this->cleanupLocalBackups($service->localDirectory(), $daysToKeep),
@@ -57,7 +57,7 @@ class BackupCleanupCommand extends Command
                     default => throw new Exception("Invalid driver: [{$driver}]"),
                 };
     
-                $this->info('Cleanup complete!');
+                $this->line("\033[42m SUCCESS \033[0m Cleanup complete!");
             }
 
             if ($service->notifications('events.cleanup_successful')) {
@@ -73,7 +73,7 @@ class BackupCleanupCommand extends Command
                     ->notify(new CleanupFailedNotification($throwable->getMessage()));
             }
             
-            $this->error($throwable->getMessage());
+            $this->line("\033[41;97m ERROR \033[0m " . $throwable->getMessage());
             return Command::FAILURE;
         }
     }

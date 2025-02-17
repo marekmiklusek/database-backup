@@ -42,7 +42,7 @@ class BackupRunCommand extends Command
             $localDirectory = $service->localDirectory();
 
             $date = now()->format($service->storage('filename.date_format'));
-            $filename = $service->storage('filename.prefix')."_{$date}.sql";
+            $filename = $service->storage('filename.prefix') . "_{$date}.sql";
 
             File::ensureDirectoryExists($localDirectory);
             $localBackupPath = "{$localDirectory}/{$filename}";
@@ -82,7 +82,7 @@ class BackupRunCommand extends Command
                 $this->storeBackupToGoogle($localDirectory, $localBackupPath, true);
             } else {
                 match ($driver) {
-                    Driver::LOCAL->value => $this->info('Backup stored to disk: ['.Driver::LOCAL->value.']'),
+                    Driver::LOCAL->value => $this->info('Backup stored to disk: [' . Driver::LOCAL->value . ']'),
                     Driver::GOOGLE->value => $this->storeBackupToGoogle($localDirectory, $localBackupPath),
                     default => throw new Exception("Invalid driver: [{$driver}]"),
                 };
@@ -90,14 +90,13 @@ class BackupRunCommand extends Command
 
             BackupCreated::dispatch();
 
-            $this->backupCleanup($service->cleanup('automatic'));  
+            $this->backupCleanup($service->cleanup('automatic'));
 
-            $this->info('Backup complete!');
+            $this->line("\033[42m SUCCESS \033[0m Backup complete!");
             return Command::SUCCESS;
         } catch (Throwable $throwable) {
             BackupFailed::dispatch($throwable->getMessage());
-
-            $this->error($throwable->getMessage());
+            $this->line("\033[41;97m ERROR \033[0m " . $throwable->getMessage());
             return Command::FAILURE;
         }
     }
@@ -113,7 +112,7 @@ class BackupRunCommand extends Command
         (new GoogleService())->uploadBackup($localBackupPath);
 
         if ($useBothDisks) {
-            $this->info('Backup stored on both disks: ['.Driver::LOCAL->value.'] and ['.Driver::GOOGLE->value.']');
+            $this->info('Backup stored on both disks: [' . Driver::LOCAL->value . '] and [' . Driver::GOOGLE->value . ']');
             return;
         }
 
@@ -123,20 +122,20 @@ class BackupRunCommand extends Command
             File::deleteDirectory($localDirectory);
         }
 
-        $this->info('Backup stored on disk: ['.Driver::GOOGLE->value.']');
+        $this->info('Backup stored on disk: [' . Driver::GOOGLE->value . ']');
     }
 
     private function backupCleanup(bool $automatic): void
     {
         if ($automatic) {
-            $this->info('Automatic cleanup started...');
+            $this->info('Starting automatic cleanup...');
 
             $exitCode = Artisan::call(BackupCleanupCommand::class);
             $output = Artisan::output();
             if ($exitCode !== 0) {
                 throw new Exception("Automatic cleanup failed: {$output}");
             }
-            
+
             $this->info($output);
         }
     }
