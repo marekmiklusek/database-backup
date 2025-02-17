@@ -46,6 +46,7 @@ php artisan db-backup:run
 - Backups older than **14 days** are automatically deleted to free up space.  
 - This retention period is **configurable**, allowing you to adjust how long backups are kept based on your needs.
 
+#### Disabling Automatic Cleanup
 If you want to **disable automatic cleanup**, you can set the `automatic` option to `false` in the configuration file:
 ```php
 // config/database-backup.php
