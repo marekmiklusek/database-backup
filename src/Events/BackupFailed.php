@@ -1,6 +1,6 @@
 <?php
 
-namespace MarekMiklusek\LaravelDatabaseBackup\Events;
+namespace MarekMiklusek\DatabaseBackup\Events;
 
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;

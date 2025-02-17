@@ -1,18 +1,18 @@
 <?php
 
-namespace MarekMiklusek\LaravelDatabaseBackup\Commands;
+namespace MarekMiklusek\DatabaseBackup\Commands;
 
 use Exception;
 use Throwable;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Artisan;
-use MarekMiklusek\LaravelDatabaseBackup\Enums\Driver;
-use MarekMiklusek\LaravelDatabaseBackup\Events\BackupFailed;
-use MarekMiklusek\LaravelDatabaseBackup\Events\BackupCreated;
-use MarekMiklusek\LaravelDatabaseBackup\Services\ConfigService;
-use MarekMiklusek\LaravelDatabaseBackup\Services\GoogleService;
-use MarekMiklusek\LaravelDatabaseBackup\Commands\BackupCleanupCommand;
+use MarekMiklusek\DatabaseBackup\Enums\Driver;
+use MarekMiklusek\DatabaseBackup\Events\BackupFailed;
+use MarekMiklusek\DatabaseBackup\Events\BackupCreated;
+use MarekMiklusek\DatabaseBackup\Services\ConfigService;
+use MarekMiklusek\DatabaseBackup\Services\GoogleService;
+use MarekMiklusek\DatabaseBackup\Commands\BackupCleanupCommand;
 
 class BackupRunCommand extends Command
 {

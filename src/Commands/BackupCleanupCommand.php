@@ -1,6 +1,6 @@
 <?php
 
-namespace MarekMiklusek\LaravelDatabaseBackup\Commands;
+namespace MarekMiklusek\DatabaseBackup\Commands;
 
 use Exception;
 use Throwable;
@@ -8,11 +8,11 @@ use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Notification;
-use MarekMiklusek\LaravelDatabaseBackup\Enums\Driver;
-use MarekMiklusek\LaravelDatabaseBackup\Services\ConfigService;
-use MarekMiklusek\LaravelDatabaseBackup\Services\GoogleService;
-use MarekMiklusek\LaravelDatabaseBackup\Notifications\CleanupFailedNotification;
-use MarekMiklusek\LaravelDatabaseBackup\Notifications\CleanupSuccessNotification;
+use MarekMiklusek\DatabaseBackup\Enums\Driver;
+use MarekMiklusek\DatabaseBackup\Services\ConfigService;
+use MarekMiklusek\DatabaseBackup\Services\GoogleService;
+use MarekMiklusek\DatabaseBackup\Notifications\CleanupFailedNotification;
+use MarekMiklusek\DatabaseBackup\Notifications\CleanupSuccessNotification;
 
 class BackupCleanupCommand extends Command
 {

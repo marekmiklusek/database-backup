@@ -1,6 +1,6 @@
 <?php
 
-namespace MarekMiklusek\LaravelDatabaseBackup\Traits;
+namespace MarekMiklusek\DatabaseBackup\Traits;
 
 trait EnumHelper
 {

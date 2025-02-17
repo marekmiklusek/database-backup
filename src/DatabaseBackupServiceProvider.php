@@ -1,14 +1,14 @@
 <?php
 
-namespace MarekMiklusek\LaravelDatabaseBackup;
+namespace MarekMiklusek\DatabaseBackup;
 
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
-use MarekMiklusek\LaravelDatabaseBackup\Events\BackupFailed;
-use MarekMiklusek\LaravelDatabaseBackup\Events\BackupCreated;
-use MarekMiklusek\LaravelDatabaseBackup\Commands\BackupRunCommand;
-use MarekMiklusek\LaravelDatabaseBackup\Commands\BackupCleanupCommand;
-use MarekMiklusek\LaravelDatabaseBackup\Listeners\SendBackupNotification;
+use MarekMiklusek\DatabaseBackup\Events\BackupFailed;
+use MarekMiklusek\DatabaseBackup\Events\BackupCreated;
+use MarekMiklusek\DatabaseBackup\Commands\BackupRunCommand;
+use MarekMiklusek\DatabaseBackup\Commands\BackupCleanupCommand;
+use MarekMiklusek\DatabaseBackup\Listeners\SendBackupNotification;
 
 class DatabaseBackupServiceProvider extends ServiceProvider
 {

@@ -1,10 +1,10 @@
 <?php
 
-namespace MarekMiklusek\LaravelDatabaseBackup\Services;
+namespace MarekMiklusek\DatabaseBackup\Services;
 
 use Exception;
 use Illuminate\Support\Facades\Http;
-use MarekMiklusek\LaravelDatabaseBackup\Services\ConfigService;
+use MarekMiklusek\DatabaseBackup\Services\ConfigService;
 
 class GoogleService
 {

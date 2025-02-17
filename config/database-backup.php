@@ -116,7 +116,7 @@ return [
     */
 
     'events' => [
-        MarekMiklusek\LaravelDatabaseBackup\Events\BackupCreated::class,
-        MarekMiklusek\LaravelDatabaseBackup\Events\BackupFailed::class,
+        MarekMiklusek\DatabaseBackup\Events\BackupCreated::class,
+        MarekMiklusek\DatabaseBackup\Events\BackupFailed::class,
     ],
 ];

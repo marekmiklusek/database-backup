@@ -1,9 +1,9 @@
 <?php
 
-namespace MarekMiklusek\LaravelDatabaseBackup\Services;
+namespace MarekMiklusek\DatabaseBackup\Services;
 
 use Exception;
-use MarekMiklusek\LaravelDatabaseBackup\Enums\Driver;
+use MarekMiklusek\DatabaseBackup\Enums\Driver;
 
 class ConfigService
 {

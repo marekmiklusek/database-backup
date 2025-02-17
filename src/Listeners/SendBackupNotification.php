@@ -1,15 +1,15 @@
 <?php
 
-namespace MarekMiklusek\LaravelDatabaseBackup\Listeners;
+namespace MarekMiklusek\DatabaseBackup\Listeners;
 
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Notification;
-use MarekMiklusek\LaravelDatabaseBackup\Events\BackupFailed;
-use MarekMiklusek\LaravelDatabaseBackup\Events\BackupCreated;
-use MarekMiklusek\LaravelDatabaseBackup\Services\ConfigService;
-use MarekMiklusek\LaravelDatabaseBackup\Notifications\BackupFailedNotification;
-use MarekMiklusek\LaravelDatabaseBackup\Notifications\BackupSuccessNotification;
+use MarekMiklusek\DatabaseBackup\Events\BackupFailed;
+use MarekMiklusek\DatabaseBackup\Events\BackupCreated;
+use MarekMiklusek\DatabaseBackup\Services\ConfigService;
+use MarekMiklusek\DatabaseBackup\Notifications\BackupFailedNotification;
+use MarekMiklusek\DatabaseBackup\Notifications\BackupSuccessNotification;
 
 class SendBackupNotification
 {

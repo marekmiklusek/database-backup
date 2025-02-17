@@ -1,6 +1,6 @@
 <?php
 
-namespace MarekMiklusek\LaravelDatabaseBackup\Notifications;
+namespace MarekMiklusek\DatabaseBackup\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;

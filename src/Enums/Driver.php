@@ -1,8 +1,8 @@
 <?php
 
-namespace MarekMiklusek\LaravelDatabaseBackup\Enums;
+namespace MarekMiklusek\DatabaseBackup\Enums;
 
-use MarekMiklusek\LaravelDatabaseBackup\Traits\EnumHelper;
+use MarekMiklusek\DatabaseBackup\Traits\EnumHelper;
 
 enum Driver: string 
 {

@@ -22,7 +22,7 @@ Ensure your system meets the minimum version requirements before installing this
 
 ### Step 1: Install the Package
 ```bash
-composer require marekmiklusek/laravel-database-backup
+composer require marekmiklusek/database-backup
 ```
 
 ### Step 2: Publish Configuration
@@ -180,11 +180,11 @@ For Desktop Application:
 
 This package emits the following events that you can listen to in your application:
 
-- `MarekMiklusek\LaravelDatabaseBackup\Events\BackupCreated`
+- `MarekMiklusek\DatabaseBackup\Events\BackupCreated`
 
 Triggered when a database backup is successfully created.
 
-- `MarekMiklusek\LaravelDatabaseBackup\Events\BackupFailed`
+- `MarekMiklusek\DatabaseBackup\Events\BackupFailed`
 
 Triggered when a database backup fails.
 
