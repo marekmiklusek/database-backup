@@ -35,16 +35,20 @@ class BackupCleanupCommand extends Command
      */
     public function handle(ConfigService $service): int
     {
+        $this->line('');
+        $this->info('Starting database backup cleanup...');
+
         try {
             $driver = $service->getDriver();
             $daysToKeep = $service->cleanup('days_to_keep');
 
             if ($daysToKeep == 0) {
-                $this->info("Cleanup is disabled in the config file, days to keep is set to {$daysToKeep}");
+                $this->line('');
+                $this->line("\033[30;43m WARN \033[0m \033[97mCleanup is disabled in the config file, 'days_to_keep' is set to \033[1;33m{$daysToKeep}\033[0m");
                 return Command::SUCCESS;
             }
 
-            $this->info("Cleaning up backups older than {$daysToKeep} days...");
+            $this->line("\033[32mCleaning up backups older than \033[1;33m{$daysToKeep}\033[0m \033[32mon disk:\033[0m \033[36m[{$driver}]\033[32m...\033[0m");
 
             if ($service->storage('use_both_disks')) {
                 $this->cleanupLocalBackups($service->localDirectory(), $daysToKeep);
@@ -57,6 +61,7 @@ class BackupCleanupCommand extends Command
                     default => throw new Exception("Invalid driver: [{$driver}]"),
                 };
     
+                $this->line('');
                 $this->line("\033[42m SUCCESS \033[0m Cleanup complete!");
             }
 
@@ -99,20 +104,21 @@ class BackupCleanupCommand extends Command
 
             if ($created->diffInDays(now()) >= $daysToKeep) { 
                 $countDeleted++;
-                $this->info(sprintf(
-                    'Deleting old %s backup: %s (Created: %s, Last Modified: %s)', 
+                $this->line(sprintf(
+                    "\033[32mDeleting old \033[36m[%s]\033[32m backup: \033[1;97m%s\033[0m (Created: \033[1;33m%s\033[0m, Last Modified: \033[1;33m%s\033[0m)", 
                     Driver::LOCAL->value, 
                     $file->getFilename(), 
                     $created->toDateTimeString(), 
-                    $lastModified->toDateTimeString(),
+                    $lastModified->toDateTimeString()
                 ));
-
+                
                 File::delete($file->getPathname());
             }
         }
 
         if ($countDeleted === 0) {
-            $this->info('No old '.Driver::LOCAL->value.' backups found');
+            $this->line(''); 
+            $this->line("\033[97;44m INFO \033[0m No old \033[36m[".Driver::LOCAL->value."]\033[0m \033[97mbackups found\033[0m");
         }
 
         if (count(File::files($localDirectory)) === 0) {
@@ -132,20 +138,21 @@ class BackupCleanupCommand extends Command
 
             if ($created->diffInDays(now()) >= $daysToKeep) {
                 $countDeleted++;
-                $this->info(sprintf(
-                    'Deleting old %s backup: %s (Created: %s, Last Modified: %s)', 
+                $this->line(sprintf(
+                    "\033[32mDeleting old \033[36m[%s]\033[32m backup: \033[1;97m%s\033[0m (Created: \033[1;33m%s\033[0m, Last Modified: \033[1;33m%s\033[0m)", 
                     Driver::GOOGLE->value, 
                     $file['name'], 
                     $created->toDateTimeString(),
-                    $lastModified->toDateTimeString(),
-                ));
+                    $lastModified->toDateTimeString()
+                ));                
 
                 $googleService->deleteFile($file['id']);
             }
         }
 
         if ($countDeleted === 0) {
-            $this->info('No old '.Driver::GOOGLE->value.' backups found');
+            $this->line(''); 
+            $this->line("\033[97;44m INFO \033[0m No old \033[36m[".Driver::GOOGLE->value."]\033[0m \033[97mbackups found\033[0m");
         }
     }
 }

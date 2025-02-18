@@ -35,6 +35,7 @@ class BackupRunCommand extends Command
      */
     public function handle(ConfigService $service): int
     {
+        $this->line('');
         $this->info('Starting database backup...');
 
         try {
@@ -82,7 +83,7 @@ class BackupRunCommand extends Command
                 $this->storeBackupToGoogle($localDirectory, $localBackupPath, true);
             } else {
                 match ($driver) {
-                    Driver::LOCAL->value => $this->info('Backup stored to disk: [' . Driver::LOCAL->value . ']'),
+                    Driver::LOCAL->value => $this->line("\033[32mBackup stored on disk:\033[0m \033[36m[" . Driver::LOCAL->value . "]\033[0m"),
                     Driver::GOOGLE->value => $this->storeBackupToGoogle($localDirectory, $localBackupPath),
                     default => throw new Exception("Invalid driver: [{$driver}]"),
                 };
@@ -90,9 +91,11 @@ class BackupRunCommand extends Command
 
             BackupCreated::dispatch();
 
+            $this->line('');
+            $this->line("\033[42m SUCCESS \033[0m Backup complete!");
+
             $this->backupCleanup($service->cleanup('automatic'));
 
-            $this->line("\033[42m SUCCESS \033[0m Backup complete!");
             return Command::SUCCESS;
         } catch (Throwable $throwable) {
             BackupFailed::dispatch($throwable->getMessage());
@@ -112,7 +115,7 @@ class BackupRunCommand extends Command
         (new GoogleService())->uploadBackup($localBackupPath);
 
         if ($useBothDisks) {
-            $this->info('Backup stored on both disks: [' . Driver::LOCAL->value . '] and [' . Driver::GOOGLE->value . ']');
+            $this->line("\033[32mBackup stored on both disks:\033[0m \033[36m[" . Driver::LOCAL->value . "]\033[0m \033[32mand\033[0m \033[36m[" . Driver::GOOGLE->value . "]\033[0m");
             return;
         }
 
@@ -122,14 +125,12 @@ class BackupRunCommand extends Command
             File::deleteDirectory($localDirectory);
         }
 
-        $this->info('Backup stored on disk: [' . Driver::GOOGLE->value . ']');
+        $this->line("\033[32mBackup stored on disk:\033[0m \033[36m[" . Driver::GOOGLE->value . "]\033[0m");
     }
 
     private function backupCleanup(bool $automatic): void
     {
         if ($automatic) {
-            $this->info('Starting automatic cleanup...');
-
             $exitCode = Artisan::call(BackupCleanupCommand::class);
             $output = Artisan::output();
             if ($exitCode !== 0) {

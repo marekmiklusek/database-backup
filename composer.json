@@ -1,7 +1,7 @@
 {
     "name": "marekmiklusek/database-backup",
     "description": "A Laravel package for database backups.",
-    "version": "v1.1.4",
+    "version": "v1.1.5",
     "license": "MIT",
     "authors": [
         {
