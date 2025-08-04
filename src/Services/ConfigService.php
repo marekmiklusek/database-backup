@@ -66,7 +66,7 @@ final class ConfigService
     |--------------------------------------------------------------------------
     */
 
-    private function getConfigValue(string $key, string $configKey): string|bool
+    private function getConfigValue(string $key, string $configKey): string|int|bool
     {
         $config = match ($configKey) {
             self::MYSQL => config('database.connections.mysql'),
