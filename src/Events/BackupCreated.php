@@ -1,16 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MarekMiklusek\DatabaseBackup\Events;
 
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class BackupCreated
+final class BackupCreated
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 

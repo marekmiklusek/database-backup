@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MarekMiklusek\DatabaseBackup\Services;
 
 use Exception;
 use MarekMiklusek\DatabaseBackup\Enums\Driver;
 
-class ConfigService
+final class ConfigService
 {
     private const MYSQL = 'mysql';
 
@@ -45,7 +47,7 @@ class ConfigService
     public function getDriver(): string
     {
         $disk = $this->storage('disk');
-        
+
         if (! array_key_exists($this->storage('disk'), config('filesystems.disks'))) {
             throw new Exception("Disk: [{$disk}] not found in configuration file: filesystems/disks");
         }
@@ -68,8 +70,8 @@ class ConfigService
     {
         $config = match ($configKey) {
             self::MYSQL => config('database.connections.mysql'),
-            Driver::GOOGLE->value => config('filesystems.disks.' . $this->storage('disk')),
-            default => config(app('configName') . '.' . $configKey)
+            Driver::GOOGLE->value => config('filesystems.disks.'.$this->storage('disk')),
+            default => config(app('configName').'.'.$configKey)
         };
 
         $configObject = json_decode(json_encode($config));

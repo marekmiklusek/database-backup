@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MarekMiklusek\DatabaseBackup\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class CleanupSuccessNotification extends Notification
+final class CleanupSuccessNotification extends Notification
 {
     use Queueable;
 

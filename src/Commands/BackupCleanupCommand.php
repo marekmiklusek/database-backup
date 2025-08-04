@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MarekMiklusek\DatabaseBackup\Commands;
 
 use Exception;
@@ -14,7 +16,7 @@ use MarekMiklusek\DatabaseBackup\Services\GoogleService;
 use MarekMiklusek\DatabaseBackup\Notifications\CleanupFailedNotification;
 use MarekMiklusek\DatabaseBackup\Notifications\CleanupSuccessNotification;
 
-class BackupCleanupCommand extends Command
+final class BackupCleanupCommand extends Command
 {
     /**
      * The name and signature of the console command.
@@ -42,9 +44,10 @@ class BackupCleanupCommand extends Command
             $driver = $service->getDriver();
             $daysToKeep = $service->cleanup('days_to_keep');
 
-            if ($daysToKeep == 0) {
+            if ($daysToKeep === 0) {
                 $this->line('');
                 $this->line("\033[30;43m WARN \033[0m \033[97mCleanup is disabled in the config file, 'days_to_keep' is set to \033[1;33m{$daysToKeep}\033[0m");
+
                 return Command::SUCCESS;
             }
 
@@ -60,14 +63,14 @@ class BackupCleanupCommand extends Command
                     Driver::GOOGLE->value => $this->cleanupGoogleBackups($daysToKeep),
                     default => throw new Exception("Invalid driver: [{$driver}]"),
                 };
-    
+
                 $this->line('');
                 $this->line("\033[42m SUCCESS \033[0m Cleanup complete!");
             }
 
             if ($service->notifications('events.cleanup_successful')) {
                 Notification::route('mail', $service->notifications('mail.to'))
-                    ->notify(new CleanupSuccessNotification());
+                    ->notify(new CleanupSuccessNotification);
             }
 
             return Command::SUCCESS;
@@ -77,8 +80,9 @@ class BackupCleanupCommand extends Command
                 Notification::route('mail', $service->notifications('mail.to'))
                     ->notify(new CleanupFailedNotification($throwable->getMessage()));
             }
-            
-            $this->line("\033[41;97m ERROR \033[0m " . $throwable->getMessage());
+
+            $this->line("\033[41;97m ERROR \033[0m ".$throwable->getMessage());
+
             return Command::FAILURE;
         }
     }
@@ -102,22 +106,22 @@ class BackupCleanupCommand extends Command
             $created = Carbon::createFromTimestamp($file->getCtime());
             $lastModified = Carbon::createFromTimestamp($file->getMTime());
 
-            if ($created->diffInDays(now()) >= $daysToKeep) { 
+            if ($created->diffInDays(now()) >= $daysToKeep) {
                 $countDeleted++;
                 $this->line(sprintf(
-                    "\033[32mDeleting old \033[36m[%s]\033[32m backup: \033[1;97m%s\033[0m (Created: \033[1;33m%s\033[0m, Last Modified: \033[1;33m%s\033[0m)", 
-                    Driver::LOCAL->value, 
-                    $file->getFilename(), 
-                    $created->toDateTimeString(), 
+                    "\033[32mDeleting old \033[36m[%s]\033[32m backup: \033[1;97m%s\033[0m (Created: \033[1;33m%s\033[0m, Last Modified: \033[1;33m%s\033[0m)",
+                    Driver::LOCAL->value,
+                    $file->getFilename(),
+                    $created->toDateTimeString(),
                     $lastModified->toDateTimeString()
                 ));
-                
+
                 File::delete($file->getPathname());
             }
         }
 
         if ($countDeleted === 0) {
-            $this->line(''); 
+            $this->line('');
             $this->line("\033[97;44m INFO \033[0m No old \033[36m[".Driver::LOCAL->value."]\033[0m \033[97mbackups found\033[0m");
         }
 
@@ -129,8 +133,8 @@ class BackupCleanupCommand extends Command
     private function cleanupGoogleBackups(int $daysToKeep): void
     {
         $countDeleted = 0;
-        $googleService = new GoogleService();
-        $files = $googleService->listBackups(); 
+        $googleService = new GoogleService;
+        $files = $googleService->listBackups();
 
         foreach ($files as $file) {
             $created = Carbon::parse($file['createdTime']);
@@ -139,19 +143,19 @@ class BackupCleanupCommand extends Command
             if ($created->diffInDays(now()) >= $daysToKeep) {
                 $countDeleted++;
                 $this->line(sprintf(
-                    "\033[32mDeleting old \033[36m[%s]\033[32m backup: \033[1;97m%s\033[0m (Created: \033[1;33m%s\033[0m, Last Modified: \033[1;33m%s\033[0m)", 
-                    Driver::GOOGLE->value, 
-                    $file['name'], 
+                    "\033[32mDeleting old \033[36m[%s]\033[32m backup: \033[1;97m%s\033[0m (Created: \033[1;33m%s\033[0m, Last Modified: \033[1;33m%s\033[0m)",
+                    Driver::GOOGLE->value,
+                    $file['name'],
                     $created->toDateTimeString(),
                     $lastModified->toDateTimeString()
-                ));                
+                ));
 
                 $googleService->deleteFile($file['id']);
             }
         }
 
         if ($countDeleted === 0) {
-            $this->line(''); 
+            $this->line('');
             $this->line("\033[97;44m INFO \033[0m No old \033[36m[".Driver::GOOGLE->value."]\033[0m \033[97mbackups found\033[0m");
         }
     }

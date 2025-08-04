@@ -1,18 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MarekMiklusek\DatabaseBackup\Services;
 
 use Exception;
 use Illuminate\Support\Facades\Http;
-use MarekMiklusek\DatabaseBackup\Services\ConfigService;
 
-class GoogleService
+final class GoogleService
 {
     private ConfigService $service;
 
     public function __construct()
     {
-        $this->service = new ConfigService();
+        $this->service = new ConfigService;
     }
 
     public function uploadBackup(string $localBackupPath): void
@@ -20,7 +21,7 @@ class GoogleService
         $accessToken = $this->getAccessToken();
         $backupData = file_get_contents($localBackupPath);
 
-        // A boundary is a unique string that serves as a separator between different parts of data 
+        // A boundary is a unique string that serves as a separator between different parts of data
         // in a single HTTP request, typically when using the content type multipart/related or multipart/form-data.
         $boundary = '-------0123456789';
         $delimiter = "\r\n--{$boundary}\r\n";
@@ -34,13 +35,13 @@ class GoogleService
         ]);
 
         $body = $delimiter
-            . "Content-Type: application/json; charset=UTF-8\r\n\r\n"
-            . "{$metadata}\r\n"
-            . $delimiter
-            . "Content-Type: application/zip\r\n"
-            . "Content-Transfer-Encoding: base64\r\n\r\n"
-            . base64_encode($backupData) . "\r\n"
-            . $closeDelimiter;
+            ."Content-Type: application/json; charset=UTF-8\r\n\r\n"
+            ."{$metadata}\r\n"
+            .$delimiter
+            ."Content-Type: application/zip\r\n"
+            ."Content-Transfer-Encoding: base64\r\n\r\n"
+            .base64_encode($backupData)."\r\n"
+            .$closeDelimiter;
 
         $headers = ['Authorization' => "Bearer {$accessToken}"];
 
@@ -97,7 +98,7 @@ class GoogleService
             'client_id' => $this->service->googleDisk('client_id'),
             'client_secret' => $this->service->googleDisk('client_secret'),
             'refresh_token' => $this->service->googleDisk('refresh_token'),
-            'grant_type' => 'refresh_token'
+            'grant_type' => 'refresh_token',
         ]);
 
         if ($response->failed()) {

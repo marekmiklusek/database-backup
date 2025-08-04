@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MarekMiklusek\DatabaseBackup\Enums;
 
 use MarekMiklusek\DatabaseBackup\Traits\EnumHelper;
 
-enum Driver: string 
+enum Driver: string
 {
     use EnumHelper;
 

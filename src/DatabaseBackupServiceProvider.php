@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MarekMiklusek\DatabaseBackup;
 
 use Illuminate\Support\Facades\Event;
@@ -10,7 +12,7 @@ use MarekMiklusek\DatabaseBackup\Commands\BackupRunCommand;
 use MarekMiklusek\DatabaseBackup\Commands\BackupCleanupCommand;
 use MarekMiklusek\DatabaseBackup\Listeners\SendBackupNotification;
 
-class DatabaseBackupServiceProvider extends ServiceProvider
+final class DatabaseBackupServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
@@ -28,16 +30,16 @@ class DatabaseBackupServiceProvider extends ServiceProvider
         $configName = 'database-backup';
 
         // Call the config name anywhere in the package
-        $this->app->singleton('configName', fn() => $configName);
+        $this->app->singleton('configName', fn () => $configName);
 
         if ($this->app->runningInConsole()) {
             // Publish config
             $this->publishes([
-                __DIR__ . "/../config/{$configName}.php" => config_path("{$configName}.php"),
+                __DIR__."/../config/{$configName}.php" => config_path("{$configName}.php"),
             ], "{$configName}-config");
 
             // Merge config, use the package's config file as a fallback when the config file is not published
-            $this->mergeConfigFrom(__DIR__ . "/../config/{$configName}.php", $configName);
+            $this->mergeConfigFrom(__DIR__."/../config/{$configName}.php", $configName);
 
             // Register commands
             $this->commands([

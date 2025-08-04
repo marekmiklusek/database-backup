@@ -1,17 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MarekMiklusek\DatabaseBackup\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class BackupSuccessNotification extends Notification
+final class BackupSuccessNotification extends Notification
 {
     use Queueable;
 
-    public function __construct(private string $fromAddress, private string $fromName) 
+    public function __construct(private string $fromAddress, private string $fromName)
     {
         //
     }

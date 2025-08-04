@@ -1,9 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MarekMiklusek\DatabaseBackup\Listeners;
 
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Notification;
 use MarekMiklusek\DatabaseBackup\Events\BackupFailed;
 use MarekMiklusek\DatabaseBackup\Events\BackupCreated;
@@ -11,7 +11,7 @@ use MarekMiklusek\DatabaseBackup\Services\ConfigService;
 use MarekMiklusek\DatabaseBackup\Notifications\BackupFailedNotification;
 use MarekMiklusek\DatabaseBackup\Notifications\BackupSuccessNotification;
 
-class SendBackupNotification
+final class SendBackupNotification
 {
     /**
      * Create the event listener.
@@ -32,8 +32,10 @@ class SendBackupNotification
             default => false
         };
 
-        if (! $shouldNotify) return;
-        
+        if (! $shouldNotify) {
+            return;
+        }
+
         Notification::route('mail', $this->service->notifications('mail.to'))
             ->notify($this->createNotification($event));
     }

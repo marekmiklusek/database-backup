@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MarekMiklusek\DatabaseBackup\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class CleanupFailedNotification extends Notification
+final class CleanupFailedNotification extends Notification
 {
     use Queueable;
 
@@ -34,7 +35,7 @@ class CleanupFailedNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        return (new MailMessage) 
+        return (new MailMessage)
             ->subject('Database Cleanup Failed')
             ->error()
             ->line('Unfortunately, your database cleanup has failed.')

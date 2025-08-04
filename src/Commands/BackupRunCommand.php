@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MarekMiklusek\DatabaseBackup\Commands;
 
 use Exception;
@@ -12,9 +14,8 @@ use MarekMiklusek\DatabaseBackup\Events\BackupFailed;
 use MarekMiklusek\DatabaseBackup\Events\BackupCreated;
 use MarekMiklusek\DatabaseBackup\Services\ConfigService;
 use MarekMiklusek\DatabaseBackup\Services\GoogleService;
-use MarekMiklusek\DatabaseBackup\Commands\BackupCleanupCommand;
 
-class BackupRunCommand extends Command
+final class BackupRunCommand extends Command
 {
     /**
      * The name and signature of the console command.
@@ -43,7 +44,7 @@ class BackupRunCommand extends Command
             $localDirectory = $service->localDirectory();
 
             $date = now()->format($service->storage('filename.date_format'));
-            $filename = $service->storage('filename.prefix') . "_{$date}.sql";
+            $filename = $service->storage('filename.prefix')."_{$date}.sql";
 
             File::ensureDirectoryExists($localDirectory);
             $localBackupPath = "{$localDirectory}/{$filename}";
@@ -83,7 +84,7 @@ class BackupRunCommand extends Command
                 $this->storeBackupToGoogle($localDirectory, $localBackupPath, true);
             } else {
                 match ($driver) {
-                    Driver::LOCAL->value => $this->line("\033[32mBackup stored on disk:\033[0m \033[36m[" . Driver::LOCAL->value . "]\033[0m"),
+                    Driver::LOCAL->value => $this->line("\033[32mBackup stored on disk:\033[0m \033[36m[".Driver::LOCAL->value."]\033[0m"),
                     Driver::GOOGLE->value => $this->storeBackupToGoogle($localDirectory, $localBackupPath),
                     default => throw new Exception("Invalid driver: [{$driver}]"),
                 };
@@ -99,7 +100,8 @@ class BackupRunCommand extends Command
             return Command::SUCCESS;
         } catch (Throwable $throwable) {
             BackupFailed::dispatch($throwable->getMessage());
-            $this->line("\033[41;97m ERROR \033[0m " . $throwable->getMessage());
+            $this->line("\033[41;97m ERROR \033[0m ".$throwable->getMessage());
+
             return Command::FAILURE;
         }
     }
@@ -112,10 +114,11 @@ class BackupRunCommand extends Command
 
     private function storeBackupToGoogle(string $localDirectory, string $localBackupPath, bool $useBothDisks = false): void
     {
-        (new GoogleService())->uploadBackup($localBackupPath);
+        (new GoogleService)->uploadBackup($localBackupPath);
 
         if ($useBothDisks) {
-            $this->line("\033[32mBackup stored on both disks:\033[0m \033[36m[" . Driver::LOCAL->value . "]\033[0m \033[32mand\033[0m \033[36m[" . Driver::GOOGLE->value . "]\033[0m");
+            $this->line("\033[32mBackup stored on both disks:\033[0m \033[36m[".Driver::LOCAL->value."]\033[0m \033[32mand\033[0m \033[36m[".Driver::GOOGLE->value."]\033[0m");
+
             return;
         }
 
@@ -125,7 +128,7 @@ class BackupRunCommand extends Command
             File::deleteDirectory($localDirectory);
         }
 
-        $this->line("\033[32mBackup stored on disk:\033[0m \033[36m[" . Driver::GOOGLE->value . "]\033[0m");
+        $this->line("\033[32mBackup stored on disk:\033[0m \033[36m[".Driver::GOOGLE->value."]\033[0m");
     }
 
     private function backupCleanup(bool $automatic): void
