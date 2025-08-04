@@ -26,7 +26,7 @@ final class ConfigService
         return $this->getConfigValue($key, 'storage');
     }
 
-    public function cleanup(string $key): string|bool
+    public function cleanup(string $key): string|int|bool
     {
         return $this->getConfigValue($key, 'cleanup');
     }
