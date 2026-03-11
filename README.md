@@ -30,6 +30,8 @@ composer require marekmiklusek/database-backup
 php artisan vendor:publish --tag=database-backup-config
 ```
 
+That's it! Once the package is installed and configured, database backups are fully automatic. No additional setup is required.
+
 ## Local Backup Configuration
 Backups are stored locally by default using the `local` disk.
 
