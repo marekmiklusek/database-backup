@@ -64,7 +64,8 @@ final class BackupRunCommand extends Command
             File::put($credentialsFile, $credentialsContent);
 
             $command = sprintf(
-                'mysqldump --defaults-extra-file="%s" %s > "%s"',
+                '%s --defaults-extra-file="%s" %s > "%s"',
+                $service->dumpBinary(),
                 $credentialsFile,
                 $service->mysqlDB('database'),
                 $localBackupPath,

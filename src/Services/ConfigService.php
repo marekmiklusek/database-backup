@@ -86,6 +86,27 @@ final class ConfigService
         return PHP_EOL.implode(PHP_EOL, $lines).PHP_EOL;
     }
 
+    /**
+     * The dump binary to invoke.
+     *
+     * Explicit config wins; otherwise derived from dump_client
+     * ('mariadb' -> mariadb-dump, else mysqldump). Using mariadb-dump on
+     * MariaDB avoids the "Deprecated program name" warning.
+     */
+    public function dumpBinary(): string
+    {
+        $configName = app('configName');
+
+        $binary = config("{$configName}.database.dump_binary");
+        if (! empty($binary)) {
+            return (string) $binary;
+        }
+
+        $client = strtolower((string) (config("{$configName}.database.dump_client") ?: 'mysql'));
+
+        return $client === 'mariadb' ? 'mariadb-dump' : 'mysqldump';
+    }
+
     public function storage(string $key): string|bool
     {
         return $this->getConfigValue($key, 'storage');

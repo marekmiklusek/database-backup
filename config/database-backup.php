@@ -37,6 +37,11 @@ return [
         'ssl_mode' => env('MYSQL_SSL_MODE'),
         'ssl_ca' => env('MYSQL_ATTR_SSL_CA'),
         'dump_client' => env('DB_BACKUP_DUMP_CLIENT', 'mysql'),
+
+        // Dump binary to invoke. Leave null to derive it from dump_client
+        // ('mariadb' -> mariadb-dump, else mysqldump). Set an explicit path
+        // or name to override, e.g. '/usr/bin/mariadb-dump'.
+        'dump_binary' => env('DB_BACKUP_DUMP_BINARY'),
     ],
 
     /*

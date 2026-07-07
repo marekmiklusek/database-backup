@@ -80,7 +80,7 @@ DB_BACKUP_DUMP_CLIENT=mariadb
 MYSQL_SSL_MODE=REQUIRED
 ```
 
-> If the dump output shows `mysqldump: Deprecated program name ... use mariadb-dump`, your server is **MariaDB** → set `DB_BACKUP_DUMP_CLIENT=mariadb`.
+> If the dump output shows `mysqldump: Deprecated program name ... use mariadb-dump`, your server is **MariaDB** → set `DB_BACKUP_DUMP_CLIENT=mariadb`. This also makes the package call `mariadb-dump` directly, which removes that warning. To force a specific binary, set `DB_BACKUP_DUMP_BINARY=/usr/bin/mariadb-dump`.
 
 **With a CA certificate (verified connection, recommended when available):**
 
