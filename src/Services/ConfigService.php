@@ -26,10 +26,16 @@ final class ConfigService
      * based on the package's SSL config, falling back to the Laravel
      * `mysql` connection's own SSL settings.
      *
-     * Precedence:
+     * IMPORTANT: `ssl-mode` is a MySQL-only option. MariaDB's dump client
+     * (mariadb-dump / mysqldump shim) does not understand it and fails with
+     * "unknown variable 'ssl-mode=...'". For MariaDB use `ssl` +
+     * `ssl-verify-server-cert`. The `database.dump_client` config selects
+     * which dialect of options to emit ('mysql' | 'mariadb').
+     *
+     * Precedence for the CA path and enabling SSL:
      *  1. package config: database.ssl_ca / database.ssl_mode
      *  2. mysql connection: ssl_ca / options[PDO::MYSQL_ATTR_SSL_CA]
-     *  3. mysql connection: ssl_mode, or MYSQL_ATTR_SSL_VERIFY_SERVER_CERT=false
+     *  3. mysql connection: MYSQL_ATTR_SSL_VERIFY_SERVER_CERT === false
      *
      * Returns '' when no SSL settings are present (backwards compatible).
      */
@@ -39,32 +45,45 @@ final class ConfigService
         $connection = config('database.connections.mysql', []);
         $options = $connection['options'] ?? [];
 
-        $lines = [];
+        $client = strtolower((string) (config("{$configName}.database.dump_client") ?: 'mysql'));
 
         $sslCa = config("{$configName}.database.ssl_ca")
             ?: ($connection['ssl_ca']
                 ?? $connection['sslca']
                 ?? ($options[\PDO::MYSQL_ATTR_SSL_CA] ?? null));
 
-        if (! empty($sslCa)) {
-            $lines[] = "ssl-ca={$sslCa}";
+        $sslMode = strtoupper((string) (config("{$configName}.database.ssl_mode")
+            ?: ($connection['ssl_mode'] ?? $connection['sslmode'] ?? '')));
+
+        // Did the app explicitly opt out of certificate verification?
+        $skipVerify = array_key_exists(\PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT, $options)
+            && $options[\PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] === false;
+
+        // Nothing configured -> emit nothing (backwards compatible).
+        if (empty($sslCa) && $sslMode === '' && ! $skipVerify) {
+            return '';
         }
 
-        $sslMode = config("{$configName}.database.ssl_mode")
-            ?: ($connection['ssl_mode'] ?? $connection['sslmode'] ?? null);
+        $verify = ! empty($sslCa) && in_array($sslMode, ['VERIFY_CA', 'VERIFY_IDENTITY'], true);
 
-        if (! empty($sslMode)) {
-            $lines[] = 'ssl-mode='.strtoupper((string) $sslMode);
-        } elseif (
-            array_key_exists(\PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT, $options)
-            && $options[\PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] === false
-            && empty($sslCa)
-        ) {
-            // TLS required by server but cert not verifiable -> connect without verify
-            $lines[] = 'ssl-mode=REQUIRED';
+        $lines = [];
+
+        if ($client === 'mariadb') {
+            // MariaDB dialect
+            $lines[] = 'ssl';
+            if (! empty($sslCa)) {
+                $lines[] = "ssl-ca={$sslCa}";
+            }
+            $lines[] = 'ssl-verify-server-cert='.($verify ? '1' : '0');
+        } else {
+            // MySQL dialect
+            if (! empty($sslCa)) {
+                $lines[] = "ssl-ca={$sslCa}";
+            }
+            $lines[] = 'ssl-mode='.($verify ? ($sslMode ?: 'VERIFY_CA') : 'REQUIRED');
         }
 
-        return $lines === [] ? '' : PHP_EOL.implode(PHP_EOL, $lines).PHP_EOL;
+        return PHP_EOL.implode(PHP_EOL, $lines).PHP_EOL;
     }
 
     public function storage(string $key): string|bool

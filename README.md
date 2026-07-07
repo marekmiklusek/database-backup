@@ -60,6 +60,41 @@ If you prefer to manually clean up old backups, you can run the following Artisa
 php artisan db-backup:cleanup
 ```
 
+## TLS/SSL Connections (optional)
+
+By default no SSL options are passed to the dump client, so most setups need **no extra configuration**.
+
+If your database server **forces TLS** (common on managed/shared hosts, especially after a server migration), the backup may fail with:
+
+```
+mysqldump: Got error: 2026: "TLS/SSL error: Certificate verification failure: The certificate is NOT trusted." when trying to connect
+```
+
+Add the SSL settings to your `.env`:
+
+```env
+# 'mysql' (default) or 'mariadb' — MariaDB rejects `ssl-mode`, so use 'mariadb'
+DB_BACKUP_DUMP_CLIENT=mariadb
+
+# Force an encrypted connection
+MYSQL_SSL_MODE=REQUIRED
+```
+
+> If the dump output shows `mysqldump: Deprecated program name ... use mariadb-dump`, your server is **MariaDB** → set `DB_BACKUP_DUMP_CLIENT=mariadb`.
+
+**With a CA certificate (verified connection, recommended when available):**
+
+```env
+MYSQL_ATTR_SSL_CA=/path/to/ca-cert.pem
+MYSQL_SSL_MODE=VERIFY_CA
+```
+
+After changing `.env`, clear the config cache:
+
+```bash
+php artisan config:clear
+```
+
 ## Google Drive Integration
 
 ### Step 1: Configure Google Drive

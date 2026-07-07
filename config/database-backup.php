@@ -25,11 +25,18 @@ return [
     | - ssl_ca: absolute path to the server's CA certificate (.pem).
     |           Leave null if you don't have it.
     |
+    | - dump_client: which dump client dialect to emit SSL options for.
+    |     'mysql'   -> uses ssl-mode=... (MySQL 5.7+/8)
+    |     'mariadb' -> uses ssl + ssl-verify-server-cert (MariaDB / mariadb-dump)
+    |   MariaDB servers reject `ssl-mode` with "unknown variable 'ssl-mode'",
+    |   so set this to 'mariadb' when your server runs MariaDB.
+    |
     */
 
     'database' => [
         'ssl_mode' => env('MYSQL_SSL_MODE'),
         'ssl_ca' => env('MYSQL_ATTR_SSL_CA'),
+        'dump_client' => env('DB_BACKUP_DUMP_CLIENT', 'mysql'),
     ],
 
     /*
