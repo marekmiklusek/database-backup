@@ -59,6 +59,8 @@ final class BackupRunCommand extends Command
                                     port={$service->mysqlDB('port')}
                                     CNF;
 
+            $credentialsContent .= $service->mysqlSslOptions();
+
             File::put($credentialsFile, $credentialsContent);
 
             $command = sprintf(
@@ -76,7 +78,7 @@ final class BackupRunCommand extends Command
 
             if ($resultCode !== 0) {
                 throw new Exception(
-                    "Database backup failed (mysqldump exit code: {$resultCode}, mysqldump output: {$output})"
+                    "Database backup failed (mysqldump exit code: {$resultCode}, mysqldump output: ".implode(PHP_EOL, $output).')'
                 );
             }
 

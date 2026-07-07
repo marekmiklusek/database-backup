@@ -6,6 +6,34 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Database Connection / SSL Configuration
+    |--------------------------------------------------------------------------
+    |
+    | mysqldump can be stricter about TLS than the app's PDO connection.
+    | If your DB server forces TLS (common after moving to a managed host),
+    | mysqldump may fail with:
+    |   "TLS/SSL error: Certificate verification failure: ... NOT trusted"
+    |
+    | Set the SSL mode below (usually via the MYSQL_SSL_MODE env var):
+    |
+    | - ssl_mode:
+    |     null       -> no SSL options passed (default, backwards compatible)
+    |     'REQUIRED' -> force encrypted connection WITHOUT certificate verify
+    |                   (use when you don't have the server's CA cert)
+    |     'VERIFY_CA' / 'VERIFY_IDENTITY' -> require + verify (needs ssl_ca)
+    |
+    | - ssl_ca: absolute path to the server's CA certificate (.pem).
+    |           Leave null if you don't have it.
+    |
+    */
+
+    'database' => [
+        'ssl_mode' => env('MYSQL_SSL_MODE'),
+        'ssl_ca' => env('MYSQL_ATTR_SSL_CA'),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Storage Configuration
     |--------------------------------------------------------------------------
     |

@@ -21,6 +21,52 @@ final class ConfigService
         return $this->getConfigValue($key, Driver::GOOGLE->value);
     }
 
+    /**
+     * Build extra [client] lines for the mysqldump defaults-extra-file
+     * based on the package's SSL config, falling back to the Laravel
+     * `mysql` connection's own SSL settings.
+     *
+     * Precedence:
+     *  1. package config: database.ssl_ca / database.ssl_mode
+     *  2. mysql connection: ssl_ca / options[PDO::MYSQL_ATTR_SSL_CA]
+     *  3. mysql connection: ssl_mode, or MYSQL_ATTR_SSL_VERIFY_SERVER_CERT=false
+     *
+     * Returns '' when no SSL settings are present (backwards compatible).
+     */
+    public function mysqlSslOptions(): string
+    {
+        $configName = app('configName');
+        $connection = config('database.connections.mysql', []);
+        $options = $connection['options'] ?? [];
+
+        $lines = [];
+
+        $sslCa = config("{$configName}.database.ssl_ca")
+            ?: ($connection['ssl_ca']
+                ?? $connection['sslca']
+                ?? ($options[\PDO::MYSQL_ATTR_SSL_CA] ?? null));
+
+        if (! empty($sslCa)) {
+            $lines[] = "ssl-ca={$sslCa}";
+        }
+
+        $sslMode = config("{$configName}.database.ssl_mode")
+            ?: ($connection['ssl_mode'] ?? $connection['sslmode'] ?? null);
+
+        if (! empty($sslMode)) {
+            $lines[] = 'ssl-mode='.strtoupper((string) $sslMode);
+        } elseif (
+            array_key_exists(\PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT, $options)
+            && $options[\PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] === false
+            && empty($sslCa)
+        ) {
+            // TLS required by server but cert not verifiable -> connect without verify
+            $lines[] = 'ssl-mode=REQUIRED';
+        }
+
+        return $lines === [] ? '' : PHP_EOL.implode(PHP_EOL, $lines).PHP_EOL;
+    }
+
     public function storage(string $key): string|bool
     {
         return $this->getConfigValue($key, 'storage');
